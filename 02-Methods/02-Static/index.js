@@ -1,4 +1,9 @@
 const User = require("../../01-Database/03-Model/index");
+
+const {
+  findByAge,
+  findByLastName
+} = require("../../01-Database/03-Model/index");
 getSimilarAge = (req, res) => {
   User.findByAge(20, function(err, data) {
     if (err) {

@@ -39,7 +39,7 @@ router.get("/test", testRoute);
 router.post("/create", createUser);
 router.get("/read/:id", readUser);
 router.put("/update/:id", updataeUser);
-router.delete("/delete/:id", deleteUser);
+router.delete("/delete/:id", deleteUser); 
 
 //Instance Routes
 router.get("/find", userFind);

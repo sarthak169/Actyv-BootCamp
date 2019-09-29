@@ -25,6 +25,7 @@ require("dotenv").config();
  * @property {Object} consoleConfig - Console Appender
  * @property {Object} fileConfig - File Appender
  */
+
 log4js.configure({
   appenders: {
     /**
@@ -53,7 +54,7 @@ log4js.configure({
      */
     file: {
       type: "file",
-      filename: `actyv-logs.log`,
+      filename: `actyv-bootcamp-logs.log`,
       maxLogSize: 10485760,
       compress: true
     }

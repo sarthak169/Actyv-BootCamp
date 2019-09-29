@@ -38,6 +38,7 @@ const options = {
   autoIndex: false,
   reconnectTries: Number.MAX_VALUE,
   reconnectInterval: 500,
+  useUnifiedTopology: true,
   poolSize: 10
 };
 
