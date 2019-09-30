@@ -10,12 +10,14 @@
  * Requiring Mongoose
  * @const
  */
+
 const mongoose = require("mongoose");
 
 /**
  * Requiring Logger
  * @const
  */
+
 const { logger } = require("../../03-ExceptionHandling/01-Logger/index");
 
 require("dotenv").config();
@@ -51,6 +53,7 @@ const options = {
  * @param {string} mongoURI - MongoDB Connection URL
  * @param {object} connectionOptions - MongoDB Connection Options
  */
+
 mongoose.connect(process.env.mongoURI, options);
 
 /**
@@ -62,6 +65,7 @@ mongoose.connect(process.env.mongoURI, options);
  * @param {string} connected - Connection Event
  * @param {cakkback} middleware - Middleware
  */
+
 mongoose.connection.on("connected", () => {});
 
 /**
@@ -73,6 +77,7 @@ mongoose.connection.on("connected", () => {});
  * @param {string} error - Connection Event
  * @param {cakkback} middleware - Middleware
  */
+
 mongoose.connection.on("error", err => {
   logger.error("Mongoose connection has occured " + err + " error");
 });
@@ -86,6 +91,7 @@ mongoose.connection.on("error", err => {
  * @param {string} disconnected - Connection Event
  * @param {cakkback} middleware - Middleware
  */
+
 mongoose.connection.on("disconnected", () => {
   logger.info("Mongoose connection is disconnected");
 });
@@ -99,6 +105,7 @@ mongoose.connection.on("disconnected", () => {
  * @param {string} SIGINT - Connection Event
  * @param {cakkback} middleware - Middleware
  */
+
 process.on("SIGINT", function() {
   mongoose.connection.close(() => {
     process.exit(0);

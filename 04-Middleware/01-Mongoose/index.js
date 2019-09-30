@@ -1,5 +1,29 @@
-const User = require("../../../01-Database/03-Model/index");
-const { logger } = require("../../03-ExceptionHandling/01-Logger/index");
+/** User Controller
+ * @module user/controller
+ */
+
+/**
+ * @namespace userController
+ */
+
+/**
+ * Mongoose Model for User.
+ * @const
+ */
+
+const User = require("../../../01-Database/02-Schema/index");
+const { consoleLogger } = require("../../03-ExceptionHandling/01-Logger/index");
+
+
+/**
+ * Controller to use the pre method
+ * @name newMiddleware
+ * @function
+ * @memberof module:user/controller~userController
+ * @inner
+ * @param {Object} request - NULL
+ * @param {Object} response - Response Object
+ */
 
 newMiddleware = () => {
   const newUser = new User({
@@ -9,15 +33,23 @@ newMiddleware = () => {
   newUser.pre("save", function(err, res, next) {
     if (err) {
       res.status(400).json({ message: "Invalid request" });
-      logger.error(
-        "Error while creating the middleware user " + err + " error"
-      );
+    consoleLogger.error("Error Occured")
+
     }
     res.status(200).json({ message: "User created successfully!" });
-    logger.info("Middleware User created and added to database");
     next();
   });
 };
+
+/**
+ * Controller to delete te user
+ * @name deleteOneMiddleware
+ * @function
+ * @memberof module:user/controller~userController
+ * @inner
+ * @param {Object} request - NULL
+ * @param {Object} response - Response Object
+ */
 
 deleteOneMiddleware = () => {
   User.deleteOne(
@@ -28,35 +60,60 @@ deleteOneMiddleware = () => {
     (err, res) => {
       if (err) {
         res.status(400).json({ message: "No user found" });
-        logger.error("No such user found in database" + err + "error");
       }
       res.status(200).json({ message: "Request Processed" });
-      logger.info("The user with firstname Eddard deleted from database");
     }
   );
 };
+
+/**
+ * Controller to find the document
+ * @name findMiddleware
+ * @function
+ * @memberof module:user/controller~userController
+ * @inner
+ * @param {Object} request - NULL
+ * @param {Object} response - Response Object
+ */
 
 findMiddleware = (req, res) => {
   User.find((err, docs) => {
     if (err) {
       res.status(400).json({ message: "Documenting Error" });
-      logger.error("Error while searching for docs " + err + " error");
     }
     res.status(200).json(docs);
   }).sort({ lastname: "asc" });
-  logger.info("Documents fetched from collections");
 };
+
+/**
+ * Controller to find a particular document
+ * @name findOneMiddleware
+ * @function
+ * @memberof module:user/controller~userController
+ * @inner
+ * @param {Object} request - NULL
+ * @param {Object} response - Response Object
+ */
+
 
 findOneMiddleware = (req, res) => {
   User.findOne({ firstname: "Jacob" }).exec((err, user) => {
     if (err) {
       res.status(400).json({ message: "No records found" });
-      logger.error("Error while finding user by firstname " + err + " error");
     }
     res.status(200).json(User.getFUllName());
-    logger.info("full name fetched using the firstname");
   });
 };
+
+/**
+ * Controller to delete the document
+ * @name userDelete
+ * @function
+ * @memberof module:user/controller~userController
+ * @inner
+ * @param {Object} request - NULL
+ * @param {Object} response - Response Object
+ */
 
 userDelete = (req, res) => {
   User.findOneAndRemove({ _id: req.user.id }).then(() =>

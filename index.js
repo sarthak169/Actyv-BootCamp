@@ -16,7 +16,7 @@ const express = require("express");
  * Passport.js as an authentication middleware.
  * @const
  */
-const passport = require("passport");
+
 const bodyParser = require("body-parser");
 
 const app = express();
@@ -30,17 +30,20 @@ const cors = require("cors");
 /**
  * Importing mongoose connection
  */
+
 require("./01-Database/01-Connection/index");
 
 /**
  * Importing Passport Strategies
  */
+
 require("./04-Middleware/02-Passport");
 
 /**
  * Node.JS path module
  * @const
  */
+
 const path = require("path");
 
 /**
@@ -51,6 +54,7 @@ const path = require("path");
  * @inner
  * @param {method} cors - Enable cors in our application
  */
+
 app.use(cors());
 
 /**
@@ -61,6 +65,7 @@ app.use(cors());
  * @inner
  * @param {method} json - Middleware
  */
+
 app.use(express.json());
 
 /**
@@ -87,15 +92,7 @@ app.use(bodyParser.json());
 //  */
 // // app.use(cookieParser());
 
-/**
- * Initializing Passport
- * @function
- * @name use
- * @memberof module:server/app~appServer
- * @inner
- * @param {method} initialize - Midddleware
- */
-app.use(passport.initialize());
+
 
 /**
  * Serving public as a static folder.

@@ -1,57 +1,107 @@
+/**
+ * Mongoose driver for MongoDb
+ * @const
+ */
+
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
+/**
+ * Importing the Base schema model
+ * @const
+ */
+
 const Base = require("../../05-Discriminator/Base/index");
+
+/**
+ * Mongoose Schema using the base discriminator
+ * @const
+ */
 
 const userSchema = Base.discriminator(
   "User",
   new Schema({
-    //string
+    /**
+     * @SchemaType - String
+     */
+
     firstname: {
       type: String,
       required: true
     },
+
+    /**
+     * @SchemaType - String
+     */
+
     lastname: {
       type: String,
       required: true
     },
-    //number
+
+    /**
+     * @SchemaType - Number
+     * Built-in Validators : min,max
+     */
     age: {
       type: Number,
-      min: 18, //built- in validators
+      min: 18,
       max: 60
     },
-    //min and max checking
+    /**
+     * @SchemaType - String
+     * Built-in Validators : minlength, maxlength, lowercase
+     */
+
     username: {
       type: String,
-      minlength: 6, //built -in validators
+      minlength: 6,
       maxlength: 30,
       lowercase: true
     },
+    /**
+     * @SchemaType - Number
+     */
+
     phone: {
       type: Number
     },
+    /**
+     * @SchemaType - String
+     */
+
     email: {
       type: String,
       unique: true
     },
+    /**
+     * @SchemaType - String
+     */
     password: {
       type: String
     },
-    //date
+    /**
+     * @SchemaType - Date
+     */
     dob: {
       type: Date,
       default: Date.now
     },
-    //boolean
+    /**
+     * @SchemaType - Boolean
+     */
     working: {
       type: Boolean
     },
-    //array
+    /**
+     * @SchemaType - Array
+     */
     skills: {
       type: [String]
     },
-
+    /**
+     * @SchemaType - Nested
+     */
     education: [
       {
         school: {

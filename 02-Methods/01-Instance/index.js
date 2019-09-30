@@ -1,6 +1,30 @@
-const User = require("../../01-Database/03-Model/index");
+/** User Controller
+ * @module user/controller
+ */
 
-const Degree = new User({ type: "cse" });
+/**
+ * @namespace userController
+ */
+
+/**
+ * Mongoose Model for User.
+ * @const
+ */
+
+
+const User = require("../../01-Database/02-Schema/index");
+
+
+
+/**
+ * Controller to create Instance method
+ * @name userSearch
+ * @function find
+ * @memberof module:user/controller~userController
+ * @inner
+ * @param {Object} request - NULL
+ * @param {Object} response - Response Object
+ */
 
 userSearch = (req, res) => {
   User.find((err, docs) => {
@@ -11,6 +35,17 @@ userSearch = (req, res) => {
   }).sort({ lastname: "asc" });
 };
 
+
+/**
+ * Controller to create the Instance Method
+ * @name userFind
+ * @function findOne
+ * @memberof module:user/controller~userController
+ * @inner
+ * @param {Object} request - NULL
+ * @param {Object} response - Response Object
+ */
+
 userFind = (req, res) => {
   User.findOne({ firstname: "raju" }).exec((err, docs) => {
     if (err) {
@@ -20,14 +55,26 @@ userFind = (req, res) => {
   });
 };
 
-//find similar types
+
+const Degree = new User({ type: "cse" });
+
+
+/**
+ * Controller to create the Instance Method
+ * @name getDegree
+ * @function findSimilarTypes
+ * @memberof module:user/controller~userController
+ * @inner
+ * @param {Object} request - NULL
+ * @param {Object} response - Response Object
+ */
 
 getDegree = function(req, res) {
-  Degree.findSimilarTypes((err, degree) => {
+  Degree.findSimilarTypes((err, user) => {
     if (err) {
       res.status(400).json({ message: "Data Mismatch" });
     }
-    res.status(200).json(degree);
+    res.status(200).json(user);
   });
 };
 

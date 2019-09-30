@@ -10,13 +10,16 @@
  * Requiring passport
  * @const
  */
+
 const passport = require("passport");
 
 const { findUserByEmail } = require("../../01-Database/03-Model/index");
+
 /**
  * Requiring LocalStrategy from passport
  * @const
  */
+
 const LocalStrategy = require("passport-local").Strategy;
 
 /**
@@ -24,6 +27,7 @@ const LocalStrategy = require("passport-local").Strategy;
  * @property {string} username - field/json property name in request body
  * @property {string} password - field/json property name in request body
  */
+
 const options = {
   usernameField: process.env.USERNAME_FIELD,
   passwordField: process.env.PASSWORD_FIELD
@@ -37,13 +41,14 @@ const options = {
  * @inner
  * @param {Object} LocalStrategyOptions - Local Strategy Options
  */
+
 passport.use(
   new LocalStrategy(
     options,
     /**
      * Callback Function
      * @function
-     * @inner
+     * @inner 
      * @param {string} email - Username Field Value
      * @param {string} password - Password Field Value
      * @param {callback} done - Next function
@@ -61,3 +66,17 @@ passport.use(
     }
   )
 );
+
+
+/**
+ * Initializing Passport
+ * @function
+ * @name use
+ * @memberof module:server/app~appServer
+ * @inner
+ * @param {method} initialize - Midddleware
+ */
+
+app.use(passport.initialize());
+
+

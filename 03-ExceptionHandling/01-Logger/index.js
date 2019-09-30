@@ -69,12 +69,14 @@ log4js.configure({
  * Default logger
  * @const
  */
+
 const logger = log4js.getLogger();
 
 /**
  * Console Logger
  * @const
  */
+
 const consoleLogger = log4js.getLogger("console");
 
 module.exports = { logger, consoleLogger };
