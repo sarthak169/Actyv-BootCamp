@@ -48,7 +48,7 @@ const userSchema = new Schema({
 
   age: {
     type: Number,
-    min: 18,
+    min: 5,
     max: 60
   },
 
@@ -139,4 +139,10 @@ const userSchema = new Schema({
   ]
 });
 
-module.exports = User = mongoose.model("User", userSchema);
+module.exports.userSchema = userSchema;
+
+require("../methods/index");
+
+const User = mongoose.model("User", userSchema);
+
+module.exports.User = User;
