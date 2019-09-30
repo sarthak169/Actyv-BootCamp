@@ -3,7 +3,7 @@
  */
 const express = require("express");
 const bodyParser = require("body-parser");
-
+const passport = require("passport");
 /**
  * Initializing the express routers.
  */
@@ -15,6 +15,9 @@ const users = require("./routes/index");
  */
 
 require("./connection/mongoose");
+require("./passport/strategy/index");
+
+app.use(passport.initialize());
 
 /**
  * Body Parser: The body-parser is used to extracts the entire body portion of an incoming request stream and exposes it on req.body.
