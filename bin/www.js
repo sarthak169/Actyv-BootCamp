@@ -1,13 +1,11 @@
 /**
  * Module containing middlewares and routes
  */
-
-const app = require("../index");
+const app = require("../app");
 
 /**
  * Loading environment variables
  */
-
 require("dotenv").config();
 
 /**
@@ -16,11 +14,17 @@ require("dotenv").config();
 app.set("port", process.env.PORT || 3000);
 
 /**
+ * HTTP module
+ */
+const http = require("http");
+
+/**
  * Creating HTTP server.
  */
 const server = http.createServer(app);
 
 /**
- * Listen on provided port.
+ * Listen on provided connected port.
  */
-server.listen(port);
+
+server.listen(process.env.PORT);

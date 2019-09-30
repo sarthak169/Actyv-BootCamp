@@ -9,6 +9,6 @@ const app = express();
  * Initializing the mongoose connection.
  */
 
-require("connection/mongoose");
+require("./connection/mongoose");
 
 module.exports = app;

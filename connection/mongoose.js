@@ -1,9 +1,17 @@
 const mongoose = require("mongoose");
 
 /**
+ * Loading environment variables
+ */
+require("dotenv").config();
+
+/**
  * Opening Mongoose Connection
  */
-mongoose.connect(process.env.mongoURI, options);
+mongoose.connect(process.env.mongoURI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
 
 /**
  * Connected Handler
@@ -15,15 +23,13 @@ mongoose.connection.on("connected", () => {
 /**
  * Mongoose Error Handler
  */
-
 mongoose.connection.on("error", err => {
-  console.error("Mongoose connection has occured " + err + " error");
+  console.error(`Error in mongoose connection: ${err.message}`);
 });
 
 /**
  * Mongoose Disconnected Handler
  */
-
 mongoose.connection.on("disconnected", () => {
   console.info("Mongoose connection is disconnected");
 });
