@@ -1,0 +1,27 @@
+{
+  "name": "database",
+  "version": "1.0.0",
+  "description": "This is the database configuration of the bootcamp.",
+  "main": "app.js",
+  "bin": {
+    "database": "www.js"
+  },
+  "scripts": {
+    "start": "node ./bin/www",
+    "server": "nodemon ./bin/www"
+  },
+  "keywords": [
+    "mongoose",
+    "express"
+  ],
+  "author": "Sai Kumar",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^8.1.0",
+    "express": "^4.17.1",
+    "mongoose": "^5.7.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.3"
+  }
+}
