@@ -136,15 +136,7 @@ const userSchema = new Schema({
         type: String
       }
     }
-  ],
-
-  /**
-   * @SchemaType - Object
-   */
-  _id: {
-    type: Schema.Types.ObjectId,
-    autopopulate: true
-  }
+  ]
 });
 
 module.exports = User = mongoose.model("User", userSchema);

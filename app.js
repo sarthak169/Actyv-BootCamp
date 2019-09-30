@@ -3,6 +3,9 @@
  */
 const express = require("express");
 
+/**
+ * Initializing the express routers.
+ */
 const app = express();
 
 /**
