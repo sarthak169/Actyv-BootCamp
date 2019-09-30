@@ -1,5 +1,5 @@
 /**
- * Initializing JWTStrategy from passport
+ * Requiring JWTStrategy from passport
  */
 const JWTStrategy = require("passport-jwt").Strategy;
 
@@ -9,29 +9,30 @@ const JWTStrategy = require("passport-jwt").Strategy;
 require("dotenv").config();
 
 /**
- * Extracting the jwt token from the passport
+ * It containes different strategies for extracting JWT from headers
  */
 const ExtractJWT = require("passport-jwt").ExtractJwt;
-
-/**
- * Requiring passport
- */
-const passport = require("passport");
 
 /**
  * Passport options as to from where to extract the JWT
  */
 const options = {
-  jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+  jwtFromRequest: ExtractJWT.fromAuthHeaderWithScheme("JWT"),
   secretOrKey: process.env.JWT_SECRET
 };
+
+/**
+ * Requiring passport
+ */
+const passport = require("passport");
+const { User } = require("../../schema/index");
 
 /**
  * Using JWT Strategy
  */
 passport.use(
   new JWTStrategy(options, async function(jwtPayload, done) {
-    await findById(jwtPayload.id)
+    await User.findById({ _id: jwtPayload.id })
       .then(user => {
         if (user) {
           return done(null, user);

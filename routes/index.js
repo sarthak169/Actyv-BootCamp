@@ -6,6 +6,8 @@ const userController = require("../controller/index");
 const express = require("express");
 const router = express.Router();
 
+const passport = require("passport");
+
 /**
  * POST request to create a new user
  */
@@ -14,7 +16,11 @@ router.post("/create", userController.createUser);
 /**
  * GET requests read a user by it's id
  */
-router.get("/read/:id", userController.readUser);
+router.get(
+  "/read",
+  passport.authenticate("jwt", { session: false }),
+  userController.readUser
+);
 
 /**
  * GET requests read a last name of the user
@@ -46,4 +52,8 @@ router.put("/update/:id", userController.updateUser);
  */
 router.delete("/delete/:id", userController.deleteUser);
 
+/**
+ * Getting the jwt token
+ */
+router.get("/get/jwt/token", userController.generateTokens);
 module.exports = router;

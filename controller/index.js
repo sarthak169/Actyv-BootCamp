@@ -2,6 +2,7 @@
  * Mongoose User model.
  */
 const { User } = require("../schema/index");
+const jwt = require("jsonwebtoken");
 
 const HttpStatus = require("http-status-codes");
 
@@ -38,13 +39,7 @@ module.exports.createUser = (req, res) => {
  * Reading the existing user using request parameters.
  */
 module.exports.readUser = (req, res) => {
-  User.findById(req.params.id, (err, user) => {
-    if (err)
-      return res
-        .status(HttpStatus.NOT_FOUND)
-        .json({ message: "Error fetching the user by id" });
-    res.status(HttpStatus.OK).json({ user });
-  });
+  res.status(HttpStatus.OK).json({ user: req.user });
 };
 
 /**
@@ -130,4 +125,12 @@ module.exports.deleteUser = (req, res) => {
         .json({ message: "Request cannot be processed" });
     res.status(HttpStatus.OK).json({ message: "User Removed" });
   });
+};
+
+module.exports.generateTokens = (req, res) => {
+  const token = jwt.sign(
+    { id: "5d91d0cdc6044d08ec7e2581" },
+    process.env.JWT_SECRET
+  );
+  res.status(HttpStatus.OK).json({ token });
 };
