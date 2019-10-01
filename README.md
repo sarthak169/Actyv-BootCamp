@@ -716,3 +716,106 @@ Now go to folder `routes/index.js`. Here all the routes are defined, we just sep
 	1. Create an instance method to check if a person has birthday today.
 	2. Create a static method to fetch all users who are having birthday today.
 	3. Create a virtual property which will return full name ie first name + last name of the user.
+
+## Day 5
+
+Today we will be doing authentication with [passport.js](http://www.passportjs.org/). Passport is authentication middleware for Node.js.
+
+First let me intorduce you to JSON WEB TOKENS (JWT) : JSON Web Tokens are an open, industry standard [RFC 7519](https://tools.ietf.org/html/rfc7519) method for representing claims securely between two parties.
+
+We will be using [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken) npm package.
+
+**Structure of a JWT:**
+1. Header
+2. Payload
+3. Signature
+
+**Header**
+
+The header  typically  consists of two parts: the type of token, which is JWT, and the hashing algorithm that is used, such as HMAC SHA256 or RSA.
+
+Default algorithm for jsonwebtoken package is **HS256**.
+
+**Payload**
+
+The second part of the token is the payload, which we need to encode.
+
+An example payload is shown below:
+```
+{
+ "name": "John Doe",
+ "admin": true
+}
+```
+
+**Signature**
+
+To create the signature part, you have to take the encoded header, the encoded payload, a secret, the algorithm specified in the header, and sign that.
+
+```
+HMACSHA256(
+ base64UrlEncode(header) + "." +
+ base64UrlEncode(payload),
+ secret
+ )
+```
+  
+  Then you will get a jwt as shown below:
+
+`eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c`
+
+This jwt will be sent from frontend with each request to authenticate the routes.
+
+Note: We do not authenticate login and register page. they should be publically visible but say suppose the profile page needs to be authenticated. Only the valid user should be able to see his profile.
+
+Now let us see how to authenticate a route. First take a look at steps involved:
+
+1. **Define a strategy**: For example: "Local Strategy" for "Auth with Username and Password", "JWT Strategy" for "Json Web Token".
+2. **Initialize the Passport**
+3. Add passport middleware to protect the route.
+
+**Define a strategy**
+
+Move to `passport/initialize` branch. You will see a new folder `passport`. Open index.js inside `passport/strategy` directory.
+
+First step is to require the Strategy. The syntax for the same is:
+
+`const JWTStrategy = require("passport-jwt").Strategy;`
+
+Then passport give you predefined methods to extract the JWTs from req headers. To make use of them you need to import the following:
+
+`const ExtractJWT = require("passport-jwt").ExtractJwt;`
+
+Then we need to import passport.js:
+
+`const passport = require("passport");`
+
+Then we need to define the options to use with the strategy. Example:
+
+```
+const options = {
+	jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+	secretOrKey: process.env.JWT_SECRET
+};
+```
+
+It has 2 properties:
+1.  **jwtFromRequest**: This defines how are we going to extract the jwt from headers. Here we are extracting from the `Authorization` header. We will talk in detail about this in future.
+2.  **secretOrKey**:  Secret which is needed to decode the jwt.
+
+Now we have to use this jwt strategy in passport. The syntax for this is:
+
+```
+passport.use(
+	new JWTStrategy(options, async function(jwtPayload, done) {
+		await findById(jwtPayload.id)
+		.then(user => {
+			if (user) {
+				return done(null, user);
+			}
+			return done(null, false);
+		})
+		.catch(err => done(err));
+	});
+);
+```
