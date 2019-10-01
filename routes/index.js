@@ -45,12 +45,20 @@ router.get("/full-name", userController.getFullname);
 /**
  * POST requests to update the user
  */
-router.put("/update/:id", userController.updateUser);
+router.put(
+  "/update/:id",
+  passport.authenticate("jwt", { session: false }),
+  userController.updateUser
+);
 
 /**
  * DELETE request to delete the user
  */
-router.delete("/delete/:id", userController.deleteUser);
+router.delete(
+  "/delete/:id",
+  passport.authenticate("jwt", { session: false }),
+  userController.deleteUser
+);
 
 /**
  * Getting the jwt token
