@@ -1,5 +1,4 @@
 const userController = require("../controller/index");
-const { loginUser } = require("../bcrypt/hash/index");
 /**
  *Initializing the express router
  */
@@ -68,6 +67,6 @@ router.get("/get/jwt/token", userController.generateTokens);
 /**
  * Login the existing user for bcrypt compare.
  */
-router.post("/login", passport.authenticate("local"), loginUser);
+router.post("/login", passport.authenticate("local"), userController.loginUser);
 
 module.exports = router;

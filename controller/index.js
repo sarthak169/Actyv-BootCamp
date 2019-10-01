@@ -136,8 +136,17 @@ module.exports.deleteUser = (req, res) => {
  */
 module.exports.generateTokens = (req, res) => {
   const token = jwt.sign(
-    { id: "5d91d0cdc6044d08ec7e2581" },
+    { id: "5d9320714d24828f54a89b28" },
     process.env.JWT_SECRET
   );
+  res.status(HttpStatus.OK).json({ token });
+};
+
+/**
+ * Login the existing user
+ */
+
+module.exports.loginUser = (req, res) => {
+  const token = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET);
   res.status(HttpStatus.OK).json({ token });
 };
