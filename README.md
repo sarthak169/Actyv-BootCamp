@@ -473,7 +473,7 @@ Remember we used to register our routes in `app.js`.  Same thing we have to do h
 
 `require("./connection/mongoose");`
 
-This is just like running a script. When we require it means we are running the javascript present in that file. So if we require like this, it will run and establish a mongDB connection. Rember there was this line `console.info("MongoDB connected Successfully!!");` in the `connected` event handler in `connection/mongoose.js` file. This will print "MongoDB connected Successfully!!" in your console if the connection is established successfully otherwise if not it will print error to your console.
+This is just like running a script. When we require it means we are running the javascript present in that file. So if we require like this, it will run and establish a mongDB connection. Remember there was this line `console.info("MongoDB connected Successfully!!");` in the `connected` event handler in `connection/mongoose.js` file. This will print "MongoDB connected Successfully!!" in your console if the connection is established successfully otherwise if not it will print error to your console.
 
 Note: console.log() is a very bad practice. In future we will learn how to use and configure a logger.
 
@@ -564,3 +564,155 @@ Let's see an example for each one of those:
 
 Change your branch to `database/schema-methods`
 
+You will see a new folder `methods` in the root directory. Open `methods/index.js`.
+ 
+As I said above theses methods (static, instance and virtuals) are applied on the schema rather than the model first setep will be to import that schema like below.
+
+`const { userSchema } =  require("../schema/index");`
+
+Now you might be wondering why I used destructuring here but not in other imports. You will get your answer as you move further.
+
+First let's see how to define **instance methods**. Consider the following piece of code.
+
+```
+userSchema.methods.getIfAdult  =  function() {
+	return  this.age >  18;
+};
+```
+
+`this` is a keyword which will give refer to current user object.
+
+Now you might also be wondering why I did not use arrow functions here like below:
+
+```
+userSchema.methods.getIfAdult  = () => {
+	return  this.age >  18;
+};
+```
+
+So there is this one thing about arrow functions that they have no scope means we cannot use `this` keyword here.
+
+Now lets describe some **static methods**. There are two ways in which you can define static methods.
+
+Method 1:
+
+```
+userSchema.statics.findByAge  =  function(age, callback) {
+	this.find({ age: age }, callback);
+};
+```
+
+Method 2:
+```
+userSchema.static("findByLastName", function(lastname, callback) {
+	this.find({ lastname: lastname }, callback);
+});
+```
+
+Now let's see how can we implement **Virtuals**.
+```
+userSchema.virtual("fullName").get(function() {
+	return this.firstname + " " + this.lastname;
+});
+```
+
+This will create a virtual property `fullName` and whenever we will call `user.fullName` it will return `this.firstname + " " + this.lastname;`
+
+We will run all these while implementing controllers in next topic.
+
+**Important:** For all these methods to work it is important to require them before creating the model out of schema. Otherwise they will not be a part of mongoose objects.
+
+So now if you remind we create and export the model in schema files. So open "schema/index.js" and move to last. You will see the below lines.
+
+```
+module.exports.userSchema = userSchema;              ---- Line 1
+require("../methods/index");                         ---- Line 2
+const User = mongoose.model("User", userSchema);     ---- Line 3
+module.exports.User = User;                          ---- Line 4
+```
+Let's see them one by one. First focus on line 2. As I said before creating and exporting the model we have to require the above methods. So Line 2 does that.
+
+But why there are two exports. :thinking:
+
+If you open `methods/index.js` you will see on top we have to import user schema. So before requiring methods in the schema we have to export the schema so that methods/index.js can consume the schema.
+
+And now since we have to export two objects here one is model and other is schema.
+Therfore there are 2 module.exports. So now we are exporting the following object `{userSchema, User}`, and this is the reason we import like this `const { userSchema } =  require("../schema/index");` in our methods file.
+
+**Controllers**
+
+A controller is nothing but a  place to take user requests, bring data from the model and pass it back to the view.
+
+If you remember we did routing like this:
+
+```
+router.get('/info', function(req, res, next) {
+	res.status(200).json({data: "Welcome to Actyv!!"})
+});
+```
+
+If we separate the callback function, it will become a controller like below.
+
+```
+infoController = function(req, res, next) {
+	res.status(200).json({data: "Welcome to Actyv!!"})
+}
+```
+Now we can rewrite our route as below:
+
+```
+router.get('/info', infoController);
+```
+
+Now you can see the code readability is very much improved.
+
+This all we are going to implement today:
+
+First move to the branch `database/controller`. You will see a new folder named "controller". Open index.js file inside it.
+
+First the user schema is imported on the top. Let's dissect one controller.
+
+```
+module.exports.readUser = (req, res) => {
+	User.findById(req.params.id, (err, user) => {
+	if (err){
+		return res
+			.status(HttpStatus.NOT_FOUND)
+			.json({ message: "Error fetching the user by id" });
+	}
+	res.status(HttpStatus.OK).json({ user });
+	});
+};
+```
+
+1.  `readUser` will be our controller name.
+2.  `module.exports.readUser` means we want to export this controller so that other file can require it.
+3.  `req and res` are parameters for the call back function we did previously.
+4.  `findById` is an inbuilt function which comes out of the box with schemas created with mongoose driver. It takes 2 parameters, first is id and second is a callback function that will give us an error (null if no error) and the fetched user (null if not found)
+
+if there is some error we are using the response object to send a message to the frontend that there is some problem fetching the user by it's id like below :
+
+```
+return res
+		.status(HttpStatus.NOT_FOUND)
+		.json({ message: "Error fetching the user by id" });
+```
+
+But if user is found meaning error is null then we return the user found from id like below:
+
+`res.status(HttpStatus.OK).json({ user });`
+
+You can read about all the methods that comes with mongoose here: [https://mongoosejs.com/docs/api.html](https://mongoosejs.com/docs/api.html)
+
+Now go to folder `routes/index.js`. Here all the routes are defined, we just separated the callbacks and put them all in controllers.
+
+**Assignment**
+
+1.  Create a report on mongoose connection parameters: [https://mongoosejs.com/docs/connections.html](https://mongoosejs.com/docs/connections.html)
+2.  Create a report on schema parameters: [https://mongoosejs.com/docs/schematypes.html](https://mongoosejs.com/docs/schematypes.html)
+3.  Create a report on all Http Statues
+4.  Create a profile page in jade template and add 5 fields like first name, last name, address , date of birth, phone and store them in the database.
+5. Create routes and controllers for the following:
+	1. Create an instance method to check if a person has birthday today.
+	2. Create a static method to fetch all users who are having birthday today.
+	3. Create a virtual property which will return full name ie first name + last name of the user.
