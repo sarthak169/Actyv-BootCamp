@@ -1,7 +1,7 @@
 /**
  * Mongoose Schema Methods for User model.
  */
-
+const bcrypt = require("bcryptjs");
 const { userSchema } = require("../schema/index");
 
 /**

@@ -3,14 +3,16 @@
  */
 const { User } = require("../schema/index");
 const jwt = require("jsonwebtoken");
-
+const bcrypt = require("bcryptjs");
 const HttpStatus = require("http-status-codes");
+require("dotenv").config;
 
 /*------------------------------CREATE OPERATIONS--------------------------*/
 
 /**
  * Creating the new user
  */
+
 module.exports.createUser = (req, res) => {
   // Creating a user object from frontend data
   const newUser = new User({
@@ -23,13 +25,15 @@ module.exports.createUser = (req, res) => {
     password: req.body.password
   });
 
-  // Saving the user in the database
-  newUser.save(function(err, user) {
-    if (err)
-      return res
-        .status(HttpStatus.NOT_FOUND)
-        .json({ message: "User cannot be created" });
-    res.status(HttpStatus.OK).json({ user });
+  bcrypt.genSalt(10, (err, salt) => {
+    bcrypt.hash(newUser.password, salt, (err, hash) => {
+      if (err) throw err;
+      newUser.password = hash;
+      newUser
+        .save()
+        .then(user => res.status(HttpStatus.OK).json({ user }))
+        .catch(err => res.status(HttpStatus.BAD_REQUEST).json(err));
+    });
   });
 };
 
@@ -127,6 +131,9 @@ module.exports.deleteUser = (req, res) => {
   });
 };
 
+/**
+ * Generating the jwt token using the user id.
+ */
 module.exports.generateTokens = (req, res) => {
   const token = jwt.sign(
     { id: "5d91d0cdc6044d08ec7e2581" },

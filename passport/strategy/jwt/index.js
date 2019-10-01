@@ -20,12 +20,11 @@ const options = {
   jwtFromRequest: ExtractJWT.fromAuthHeaderWithScheme("JWT"),
   secretOrKey: process.env.JWT_SECRET
 };
-
 /**
  * Requiring passport
  */
 const passport = require("passport");
-const { User } = require("../../schema/index");
+const { User } = require("../../../schema/index");
 
 /**
  * Using JWT Strategy
