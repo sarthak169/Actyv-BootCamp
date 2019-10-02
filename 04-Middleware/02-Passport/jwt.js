@@ -1,62 +1,43 @@
-/** JWT Strategy
- * @module strategy/jwt
- */
-
-/**
- * @namespace jwtStrategy
- */
-
-/**
- * Requiring passport
- * @const 
- */
-const passport = require("passport");
-
 /**
  * Requiring JWTStrategy from passport
- * @const
  */
 const JWTStrategy = require("passport-jwt").Strategy;
 
 /**
- * Function which returns the JWT
+ * Importing the environment variables
+ */
+require("dotenv").config();
+
+/**
+ * It containes different strategies for extracting JWT from headers
  */
 const ExtractJWT = require("passport-jwt").ExtractJwt;
 
 /**
- * @typedef {Object} options
- * @property {function} ExtractJWT - Function which returns JWT
- * @property {string} secretOrKey - JWT secret
+ * Passport options as to from where to extract the JWT
  */
 const options = {
-  jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+  jwtFromRequest: ExtractJWT.fromAuthHeaderWithScheme("JWT"),
   secretOrKey: process.env.JWT_SECRET
 };
+/**
+ * Requiring passport
+ */
+const passport = require("passport");
+const { User } = require("../../01-Database/02-Schema/index");
 
-module.exports = passport => {
-  /**
-   * Adding JWT Strategy
-   * @name use
-   * @function
-   * @memberof module:strategy/jwt~jwtStrategy
-   * @inner
-   * @param {Object} JWTStrategyOptions - JWT Strategy Options
-   */
-  passport.use(
-    new JWTStrategy(
-      options,
-      /**
-       * Callback Function
-       * @function
-       * @inner
-       * @param {object} jwtPayload - Decrypted JWT payload
-       * @param {callback} done - Next function
-       */
-      async function(jwtPayload, done) {
-        await findById(jwtPayload.id).then(user => {
+/**
+ * Using JWT Strategy
+ */
+passport.use(
+  new JWTStrategy(options, async function(jwtPayload, done) {
+    await User.findById({ _id: jwtPayload.id })
+      .then(user => {
+        if (user) {
           return done(null, user);
-        });
-      }
-    )
-  );
-};
+        }
+        return done(null, false);
+      })
+      .catch(err => done(err));
+  })
+);

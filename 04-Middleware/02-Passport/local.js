@@ -1,82 +1,51 @@
-/** Local Strategy
- * @module strategy/local
- */
-
-/**
- * @namespace localStrategy
- */
-
-/**
- * Requiring passport
- * @const
- */
-
-const passport = require("passport");
-
-const { findUserByEmail } = require("../../01-Database/03-Model/index");
-
 /**
  * Requiring LocalStrategy from passport
- * @const
  */
 
 const LocalStrategy = require("passport-local").Strategy;
 
 /**
- * @typedef {Object} options
- * @property {string} username - field/json property name in request body
- * @property {string} password - field/json property name in request body
+ * Importing the environment variables
+ */
+
+require("dotenv").config();
+const bcrypt = require("bcryptjs");
+
+/**
+ * Passport options for the local jwt strategy
  */
 
 const options = {
   usernameField: process.env.USERNAME_FIELD,
-  passwordField: process.env.PASSWORD_FIELD
+  password: process.env.PASSWORD_FIELD
 };
 
 /**
- * Adding Local Strategy
- * @name use
- * @function
- * @memberof module:strategy/local~localStrategy
- * @inner
- * @param {Object} LocalStrategyOptions - Local Strategy Options
+ * Requiring passport
+ */
+
+const passport = require("passport");
+const { User } = require("../../01-Database/02-Schema/index");
+
+/**
+ * Using passport Local Strategy
  */
 
 passport.use(
-  new LocalStrategy(
-    options,
-    /**
-     * Callback Function
-     * @function
-     * @inner 
-     * @param {string} email - Username Field Value
-     * @param {string} password - Password Field Value
-     * @param {callback} done - Next function
-     */
-    async (email, password, done) => {
-      // Fetch User By Email
-      const user = await findUserByEmail(email);
-      if (!user) return done(null, false, { message: "User Not found" });
-
-      // Validate Password
-      const validate = await user.isCorrectPassword(password);
-      if (!validate) return done(null, false, { message: "Wrong Password" });
-
-      return done(null, user, { message: "Login Success" });
-    }
-  )
+  new LocalStrategy(options, async (email, password, done) => {
+    await User.findOne({ email })
+      .then(user => {
+        if (user) {
+          /**
+           * Comparing the password using bcrypt.compare()
+           */
+          bcrypt.compare(password, user.password, function(err, isMatch) {
+            if (err) done(err);
+            if (isMatch) return done(null, user);
+            return done(null, false);
+          });
+        }
+      })
+      .catch(err => done(err));
+  })
 );
-
-
-/**
- * Initializing Passport
- * @function
- * @name use
- * @memberof module:server/app~appServer
- * @inner
- * @param {method} initialize - Midddleware
- */
-
-app.use(passport.initialize());
-
-

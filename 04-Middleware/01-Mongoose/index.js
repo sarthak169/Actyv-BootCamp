@@ -11,9 +11,8 @@
  * @const
  */
 
-const User = require("../../../01-Database/02-Schema/index");
+const { User } = require("../../../01-Database/02-Schema/index");
 const { consoleLogger } = require("../../03-ExceptionHandling/01-Logger/index");
-
 
 /**
  * Controller to use the pre method
@@ -25,7 +24,7 @@ const { consoleLogger } = require("../../03-ExceptionHandling/01-Logger/index");
  * @param {Object} response - Response Object
  */
 
-newMiddleware = () => {
+module.exports.newMiddleware = () => {
   const newUser = new User({
     firstname: "jacob",
     lastname: "sam"
@@ -33,8 +32,7 @@ newMiddleware = () => {
   newUser.pre("save", function(err, res, next) {
     if (err) {
       res.status(400).json({ message: "Invalid request" });
-    consoleLogger.error("Error Occured")
-
+      consoleLogger.error("Error Occured");
     }
     res.status(200).json({ message: "User created successfully!" });
     next();
@@ -51,7 +49,7 @@ newMiddleware = () => {
  * @param {Object} response - Response Object
  */
 
-deleteOneMiddleware = () => {
+module.exports.deleteOneMiddleware = () => {
   User.deleteOne(
     {
       firstname: "Eddard",
@@ -76,7 +74,7 @@ deleteOneMiddleware = () => {
  * @param {Object} response - Response Object
  */
 
-findMiddleware = (req, res) => {
+module.exports.findMiddleware = (req, res) => {
   User.find((err, docs) => {
     if (err) {
       res.status(400).json({ message: "Documenting Error" });
@@ -95,8 +93,7 @@ findMiddleware = (req, res) => {
  * @param {Object} response - Response Object
  */
 
-
-findOneMiddleware = (req, res) => {
+module.exports.findOneMiddleware = (req, res) => {
   User.findOne({ firstname: "Jacob" }).exec((err, user) => {
     if (err) {
       res.status(400).json({ message: "No records found" });
@@ -115,18 +112,10 @@ findOneMiddleware = (req, res) => {
  * @param {Object} response - Response Object
  */
 
-userDelete = (req, res) => {
+module.exports.userDelete = (req, res) => {
   User.findOneAndRemove({ _id: req.user.id }).then(() =>
     res.status(200).json({ success: true })
   );
-};
-
-module.exports = {
-  findOneMiddleware,
-  findMiddleware,
-  deleteOneMiddleware,
-  newMiddleware,
-  userDelete
 };
 
 //document middleware, model middleware, aggregate middleware, and query middleware

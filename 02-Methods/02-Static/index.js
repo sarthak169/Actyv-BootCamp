@@ -11,12 +11,7 @@
  * @const
  */
 
-const User = require("../../01-Database/02-Schema/index");
-
-const {
-  findByAge,
-  findByLastName
-} = require("../../01-Database/03-Model/index");
+const { User } = require("../../01-Database/02-Schema/index");
 
 /**
  * Controller to create static method
@@ -28,7 +23,7 @@ const {
  * @param {Object} response - Response Object
  */
 
-getSimilarAge = (req, res) => {
+module.exports.getSimilarAge = (req, res) => {
   User.findByAge(20, function(err, data) {
     if (err) {
       res.status(400).json({ message: "Age Mismatch" });
@@ -51,7 +46,7 @@ getSimilarAge = (req, res) => {
  * @param {Object} response - Response Object
  */
 
-getSimilarLastName = (req, res) => {
+module.exports.getSimilarLastName = (req, res) => {
   User.findByLastName("Langer", function(err, data) {
     if (err) {
       res.status(400).json({ message: "Lastname Mismatch" });
@@ -62,9 +57,4 @@ getSimilarLastName = (req, res) => {
     res.status(200).json(data);
     logger.info("Similar record fetched using lastname");
   });
-};
-
-module.exports = {
-  getSimilarAge,
-  getSimilarLastName
 };

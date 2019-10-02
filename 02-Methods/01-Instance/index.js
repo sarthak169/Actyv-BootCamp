@@ -11,10 +11,7 @@
  * @const
  */
 
-
-const User = require("../../01-Database/02-Schema/index");
-
-
+const { User } = require("../../01-Database/02-Schema/index");
 
 /**
  * Controller to create Instance method
@@ -26,7 +23,7 @@ const User = require("../../01-Database/02-Schema/index");
  * @param {Object} response - Response Object
  */
 
-userSearch = (req, res) => {
+module.exports.userSearch = (req, res) => {
   User.find((err, docs) => {
     if (err) {
       res.status(400).json({ message: "Document Error" });
@@ -34,7 +31,6 @@ userSearch = (req, res) => {
     res.status(200).json(docs);
   }).sort({ lastname: "asc" });
 };
-
 
 /**
  * Controller to create the Instance Method
@@ -46,7 +42,7 @@ userSearch = (req, res) => {
  * @param {Object} response - Response Object
  */
 
-userFind = (req, res) => {
+module.exports.userFind = (req, res) => {
   User.findOne({ firstname: "raju" }).exec((err, docs) => {
     if (err) {
       res.status(400).json({ message: "No records found" });
@@ -55,9 +51,7 @@ userFind = (req, res) => {
   });
 };
 
-
 const Degree = new User({ type: "cse" });
-
 
 /**
  * Controller to create the Instance Method
@@ -69,17 +63,11 @@ const Degree = new User({ type: "cse" });
  * @param {Object} response - Response Object
  */
 
-getDegree = function(req, res) {
+module.exports.getDegree = function(req, res) {
   Degree.findSimilarTypes((err, user) => {
     if (err) {
       res.status(400).json({ message: "Data Mismatch" });
     }
     res.status(200).json(user);
   });
-};
-
-module.exports = {
-  userFind,
-  userSearch,
-  getDegree
 };

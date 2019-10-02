@@ -6,37 +6,28 @@
  * @namespace userController
  */
 
-const Base = require("./index");
-const User = require("../../01-Database/03-Model/index");
+const { Book } = require("./index");
 
-testRouter = (req, res) => {
-  res
-    .status(200)
-    .json({ message: "User With Base discriminator works successfully" });
-};
-
-createBaseUser = (req, res) => {
-  const newUser = new User({
-    firstname: req.body.firstname,
-    lastname: req.body.lastname,
+module.exports.createBook = (req, res) => {
+  const newBook = new Book({
+    name: req.body.name,
+    isbn: req.body.isbn,
     place: req.body.place,
     color: req.body.color
   });
-  newUser.save(function(err, user) {
-    if (err) {
-      res.status(400).json({ message: "Base discriminator error!" });
-    }
+  newBook.save(function(err, book) {
+    if (err)
+      return res.status(400).json({ message: "Base discriminator error" });
+
     res.status(200).json({ message: "Base Discriminator user created" });
   });
 };
 
-readBaseUser = (req, res) => {
-  User.findById(req.params.id, (err, user) => {
+module.exports.readBook = (req, res) => {
+  Book.findById(req.params.id, (err, book) => {
     if (err) {
       res.status(404).json({ message: "Invalid Request" });
     }
-    res.status(200).json(user);
+    res.status(200).json({ book });
   });
 };
-
-module.exports = { testRouter, createBaseUser, readBaseUser };

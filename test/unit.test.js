@@ -407,7 +407,6 @@ describe("Instance Methods", () => {
       .end((err, res) => {
         res.should.have.status(200);
         res.body.should.be.a("array");
-        // res.body.should.have.property("array");/
       });
     done();
   });
@@ -463,43 +462,25 @@ describe("Instance Methods", () => {
  * @param {callback} middleware - function with done as a param
  */
 
-// describe("Static Methods", () => {
-//   /**
-//    * It will return the document based on the similar type
-//    * @function
-//    * @inner
-//    * @param {string} description - string explaining what test should do
-//    * @param {callback} middleware - function with done as a param
-//    */
-//   // it("it should get documents based on the type", done => {
-//   //   chai
-//   //     .request(server)
-//   //     .get("/users/age")
-//   //     .end((err, res) => {
-//   //       res.should.have.status(200);
-//   //       res.body.should.have.a("object");
-//   //     });
-//   //   done();
-//   // });
-
-//   /**
-//    * It will return the document based on the similar type
-//    * @function
-//    * @inner
-//    * @param {string} description - string explaining what test should do
-//    * @param {callback} middleware - function with done as a param
-//    */
-//   it("it should get document based on name", done => {
-//     chai
-//       .request(server)
-//       .get("/users/names")
-//       .end((err, res) => {
-//         res.should.have.status(200);
-//         res.body.should.have.a("object");
-//       });
-//     done();
-//   });
-// });
+describe("Static Methods", () => {
+  /**
+   * It will return the document based on the similar type
+   * @function
+   * @inner
+   * @param {string} description - string explaining what test should do
+   * @param {callback} middleware - function with done as a param
+   */
+  it("it should get documents based on the type", done => {
+    chai
+      .request(server)
+      .get("/users/age")
+      .end((err, res) => {
+        res.should.have.status(200);
+        res.body.should.have.a("object");
+      });
+    done();
+  });
+});
 
 /**
  * Test to implement the instance methods

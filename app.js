@@ -22,22 +22,10 @@ const bodyParser = require("body-parser");
 const app = express();
 
 /**
- * CORS is a Node.JS package for providing a Connect/Express middleware that can be used to enable CORS
- * @const
- */
-const cors = require("cors");
-
-/**
  * Importing mongoose connection
  */
 
 require("./01-Database/01-Connection/index");
-
-/**
- * Importing Passport Strategies
- */
-
-require("./04-Middleware/02-Passport");
 
 /**
  * Node.JS path module
@@ -45,17 +33,6 @@ require("./04-Middleware/02-Passport");
  */
 
 const path = require("path");
-
-/**
- * Cross Origin Resource Sharing (CORS) allows us to use Web applications within browsers when domains aren't the same
- * @function
- * @name use
- * @memberof module:server/app~appServer
- * @inner
- * @param {method} cors - Enable cors in our application
- */
-
-app.use(cors());
 
 /**
  * Recognize the incoming Request Object as a JSON Object.
@@ -82,17 +59,23 @@ app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// /**
-//  * Parse Cookie header and populate req.cookies with an object keyed by the cookie names.
-//  * @function
-//  * @name use
-//  * @memberof module:server/app~appServer
-//  * @inner
-//  * @param {method} cookieParser - Midddleware
-//  */
-// // app.use(cookieParser());
+/**
+ * Initializing Passport
+ * @function
+ * @name use
+ * @memberof module:server/app~appServer
+ * @inner
+ * @param {method} initialize - Midddleware
+ */
+const passport = require("passport");
+app.use(passport.initialize());
 
+/**
+ * Importing Passport Strategies
+ */
 
+require("./04-Middleware/02-Passport/jwt");
+require("./04-Middleware/02-Passport/local");
 
 /**
  * Serving public as a static folder.
@@ -103,17 +86,6 @@ app.use(bodyParser.json());
  * @param {method} static - Midddleware
  */
 app.use(express.static(path.join(__dirname, "public")));
-
-// /**
-//  * Setting View Engine
-//  * @function
-//  * @name use
-//  * @memberof module:server/app~appServer
-//  * @inner
-//  * @param {string} type - View Engine
-//  * @param {string} pug - Template Name
-//  */
-// app.set("view engine", "pug");
 
 /**
  * Serving Routes

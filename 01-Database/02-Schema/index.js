@@ -1,139 +1,148 @@
-/**
- * Mongoose driver for MongoDb
- * @const
- */
-
 const mongoose = require("mongoose");
+
 const Schema = mongoose.Schema;
 
-/**
- * Importing the Base schema model
- * @const
- */
+const userSchema = new Schema({
+  /**
+   * To declare a path as a string you may use either the String global constructor or the string 'String'.
+   * @SchemaType - String
+   * The string Schema type will have the built -in validators as:
+   * lowercase, uppercase, trim, match, enum, minlength, maxlength
+   */
 
-const Base = require("../../05-Discriminator/Base/index");
+  firstname: {
+    type: String,
+    required: true
+  },
 
-/**
- * Mongoose Schema using the base discriminator
- * @const
- */
+  /**
+   * @SchemaType - String
+   */
 
-const userSchema = Base.discriminator(
-  "User",
-  new Schema({
-    /**
-     * @SchemaType - String
-     */
+  lastname: {
+    type: String,
+    required: true
+  },
 
-    firstname: {
-      type: String,
-      required: true
-    },
+  /**
+   * To declare a path as a number, you may use either the Number global constructor or the string 'Number'.
+   * @SchemaType - Number
+   * The number schema type consists of the built-in validators as:
+   * min, max
+   */
 
-    /**
-     * @SchemaType - String
-     */
+  age: {
+    type: Number,
+    min: 5,
+    max: 60
+  },
 
-    lastname: {
-      type: String,
-      required: true
-    },
+  /**
+   * @SchemaType - String
+   */
 
-    /**
-     * @SchemaType - Number
-     * Built-in Validators : min,max
-     */
-    age: {
-      type: Number,
-      min: 18,
-      max: 60
-    },
-    /**
-     * @SchemaType - String
-     * Built-in Validators : minlength, maxlength, lowercase
-     */
+  username: {
+    type: String,
+    minlength: 6,
+    maxlength: 30,
+    lowercase: true
+  },
 
-    username: {
-      type: String,
-      minlength: 6,
-      maxlength: 30,
-      lowercase: true
-    },
-    /**
-     * @SchemaType - Number
-     */
+  /**
+   * @SchemaType - Number
+   */
 
-    phone: {
-      type: Number
-    },
-    /**
-     * @SchemaType - String
-     */
+  phone: {
+    type: Number
+  },
 
-    email: {
-      type: String,
-      unique: true
-    },
-    /**
-     * @SchemaType - String
-     */
-    password: {
-      type: String
-    },
-    /**
-     * @SchemaType - Date
-     */
-    dob: {
-      type: Date,
-      default: Date.now
-    },
-    /**
-     * @SchemaType - Boolean
-     */
-    working: {
-      type: Boolean
-    },
-    /**
-     * @SchemaType - Array
-     */
-    skills: {
-      type: [String]
-    },
-    /**
-     * @SchemaType - Nested
-     */
-    education: [
-      {
-        school: {
-          type: String
-        },
-        degree: {
-          type: String
-        }
+  /**
+   * @SchemaType - String
+   */
+
+  email: {
+    type: String,
+    unique: true
+  },
+
+  /**
+   * @SchemaType - String
+   */
+
+  password: {
+    type: String
+  },
+
+  /**
+   * Date is a built in type.
+   * The default values can be given to the schema type as Date.now, Date.UTC
+   * @SchemaType - Date
+   */
+
+  dob: {
+    type: Date,
+    default: Date.now
+  },
+
+  /**
+   * Booleans in Mongoose are plain JavaScript booleans. By default, Mongoose casts the below values to true.
+   * The boolean is a flag bit which either consists 0 or 1.
+   * @SchemaType - Boolean
+   */
+
+  working: {
+    type: Boolean
+  },
+
+  /**
+   * Mongoose supports arrays of SchemaTypes and arrays of subdocuments.
+   *  Arrays of SchemaTypes are also called primitive arrays, and arrays of subdocuments are also called document arrays.
+   * @SchemaType - Array
+   */
+
+  skills: {
+    type: [String]
+  },
+
+  /**
+   * The nested Schema type consists of different other types as Stirng, Number etc.
+   * @SchemaType - Nested
+   */
+
+  education: [
+    {
+      school: {
+        type: String
+      },
+      percentage: {
+        type: Number
+      },
+      degree: {
+        type: String
       }
-    ],
-
-    _id: {
-      type: Schema.Types.ObjectId,
-      autopopulate: true
     }
-  })
-);
+  ]
+});
 
-module.exports = User = mongoose.model("User");
+module.exports.userSchema = userSchema;
+
+require("../03-Methods/index");
+
+const User = mongoose.model("User", userSchema);
+
+module.exports.User = User;
 
 /**
- * @typedef {Object} SchemaTypes
- * @property {String} firstName - First Name of the User
- * @property {String} lastname - Last Name of the User
- * @property {Number} age - Age of the User
- * @property {String} username -Username of the User
- * @property {Number} phone - Phone number of the user
- * @property {String} email - Email Address of the use
- * @property {String} password - Password of the User
- * @property {Date} dob - Date of Birth of the User
- * @property {Boolean} working - Working status of User
- * @property {Array} skills - skills of the User
- * @property {Nested} education - education of the User
- * @property {String} _id - Id of the User
+ * @typedef {Object} UserSchema
+ * @typedef {Object} User
+ * @property {String} firstName - First Name of User
+ * @property {String} lastName - Last Name of User
+ * @property {String} age - Age of User
+ * @property {String} email -  email address of User
+ * @property {String} phone -  phone numnber of User
+ * @property {String} password - unique password of User
+ * @property {String} dob - date of birth of User
+ * @property {String} working - working status of the user
+ * @property {String} skills - skills of the user
+ * @property {String} education - education of the user.
  */

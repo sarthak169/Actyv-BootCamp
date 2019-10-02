@@ -11,7 +11,7 @@
  * @const
  */
 
-const User = require("../../01-Database/03-Model/index");
+const { User } = require("../../01-Database/03-Methods/index");
 
 /**
  * Controller to create the virtual method
@@ -23,7 +23,7 @@ const User = require("../../01-Database/03-Model/index");
  * @param {Object} response - Response Object
  */
 
-getVirtualUser = (err, res) => {
+module.exports.getVirtualUser = (err, res) => {
   const usr = new User({
     firstname: "Steve",
     lastname: "Jobs"
@@ -33,5 +33,3 @@ getVirtualUser = (err, res) => {
   }
   res.status(200).json(usr.fullName);
 };
-
-module.exports = { getVirtualUser };
