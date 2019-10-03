@@ -18,7 +18,6 @@
  7. [Better Comments](https://marketplace.visualstudio.com/items?itemName=aaron-bond.better-comments)
  8. [Node Exec](https://marketplace.visualstudio.com/items?itemName=miramac.vscode-exec-node)
  9. [CodeMetrics](https://marketplace.visualstudio.com/items?itemName=kisstkondoros.vscode-codemetrics)
- 10. [GitLens](https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens)
 
 Functionality of each of the plugin is described [here]( https://docs.google.com/document/d/1ZIMLZxVNHMiGTucqoM5Y-DKLh9hw0KRg2LhRG_yFJFo/edit?usp=sharing )
 
@@ -771,7 +770,7 @@ Note: We do not authenticate login and register page. they should be publically 
 
 Now let us see how to authenticate a route. First take a look at steps involved:
 
-1. **Define a strategy**: For example: "Local Strategy" for "Auth with Username and Password", "JWT Strategy" for "Json Web Token".
+1. **Define a strategy**: For example: for login with username and password we use "local" strategy and we use "jwt" strategy for protecting the routes.
 2. **Initialize the Passport**
 3. Add passport middleware to protect the route.
 
@@ -809,7 +808,7 @@ Now we have to use this jwt strategy in passport. The syntax for this is:
 ```
 passport.use(
 	new JWTStrategy(options, async function(jwtPayload, done) {
-		await findById(jwtPayload.id)
+		await User.findById({ _id:  jwtPayload.id })
 		.then(user => {
 			if (user) {
 				return done(null, user);
@@ -820,3 +819,140 @@ passport.use(
 	});
 );
 ```
+
+Here we are asking passport to use the JWT Strategy and we provide the strategy with the options we defined above, and it will return us `jwtPayload` and `done`.
+
+**jwtPayload** is the same data we encoded in the json web token and
+**done** is the function which will call the next middleware. We will talk about it later.
+
+Now we have to initialise the passpoet. Open `app.js` in the root directory.
+
+Now first we have to require the above strategy inside app.js like below:
+
+`require("./passport/strategy/index");`
+
+and then we initialize using:
+
+`app.use(passport.initialize());`
+
+When its done we just need to protect our routes. For this please first move to the `passport/authenticate` branch and open `routes/index.js`. Let's first see the syntax for it:
+
+```
+router.get(
+	"/read",
+	passport.authenticate("jwt", { session: false }),
+	userController.readUser
+);
+```
+
+Until now we used to it like below
+
+```
+router.get("/read", userController.readUser);
+```
+
+But to authenticate it we used the passport's jwt startegy like this: `passport.authenticate("jwt", { session: false })`
+
+Now what it will do is before actually hitting the controller method it will first validate the token and then send the request to the controller.
+
+and if you remember we did something like this `done(null, user)`  and we said `done` is a function which calls the next middleware and in this case the next middleware is the controller and what done(null, user) will do is , it will append the user to request object. So in controller we can use the req.user to access the user sent by done method.
+
+To see this in action move to `contoller/index` file and search for readUser method. 
+
+```
+module.exports.readUser = (req, res) => {
+	res.status(HttpStatus.OK).json({ user: req.user });
+};
+```
+
+if you try to hit the route `/read` then it will return "Unauthenticated". To make it work we have to send a token with the request so that passport can verify and let you proceed further.
+
+But we haven't created a token yet. You can use [jwt.io](https://jwt.io/) or we added a route "/get/jwt/token" for it in `routes/index.js`. You can call this route passing and it will return you the token.
+
+Now after getting the token let's see how to pass this in postman.
+
+
+
+
+But this will be not the case in a production env where we should hit a route to get a token. So we are going to do that now. The flow will be like this.
+
+post "/login" route will be protected by "Local Strategy" and it will return us with a token. Then with each subsequent request like "/profile" we will send this token in the header and get "/profile" route is protected by "jwt" strategy which will validate the token and will let us proceed further.
+
+So now move to `passport/login` branch.
+
+The local strategy lies in the "passport/strategy/local/index.js" file. Open this file.
+
+First we will import the local strategy and bcrypt for password compare:
+
+```
+const LocalStrategy = require("passport-local").Strategy;
+const bcrypt = require("bcryptjs");
+```
+
+Then we will have to define the options for the local strategy:
+
+```
+const options = {
+	usernameField: process.env.USERNAME_FIELD,
+	password: process.env.PASSWORD_FIELD
+};
+```
+
+in usernameField and password we need to assign them with the properties in which username and password is coming from the request. Like for eg. from the frontend if you are sending the username through "email" object and password through "password" like 
+
+```
+{
+	email: "lazy-developer@email.com",
+	password: "toolazytoset"
+}
+```
+
+then the passport option will be as follows: 
+
+```
+const options = {
+	usernameField: "email",
+	password: "password"
+};
+```
+
+and then we pass these options in new LocalStrategy() as below:
+
+```
+passport.use(
+	new LocalStrategy(options, async (email, password, done) => {
+	await User.findOne({ email })
+		.then(user => {
+			if (user) {
+				bcrypt.compare(password, user.password, function(err, isMatch) {
+					if (err) done(err);
+					if (isMatch) return done(null, user);
+					return done(null, false);
+				});
+			}
+		})
+		.catch(err => done(err));
+	})
+);
+```
+
+here we are just finding the user by email and then comparing the password. If the password matches then we are sending the user via done method.
+
+Now it's time to use this local strategy in the login route.
+
+Open "routes/index.js" where you will find the below piece of code:
+
+`router.post("/login", passport.authenticate("local"), userController.loginUser)`.
+
+Here we are saying whenever there is a post request on login then first authenticate it with local strategy which is comparing if the password matches or not. If it maches then it will go to longinUser method inside "controller/index.js" which is as follows:
+
+```
+module.exports.loginUser = (req, res) => {
+	const token = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET);
+	res.status(HttpStatus.OK).json({ token });
+};
+```
+
+As I said previously also, done(null, user) will add a user property to request object which can later be used as req.user. So in loginUser method we are generating a token using user's id property and we are sending back to the frontend.
+
+So this is how we have to get our token. Now let's see how we can pass this token in request header using postman.
