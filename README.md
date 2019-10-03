@@ -1,7 +1,3 @@
-# JAVASCRIPT CRASH COURSE
-It is the small crash course of the javascript basics. The course will make you code ready in the javascript.
-
-
 ## Javascript
 
 The JavaScript is a scripting or dynamic programming language that allows you to implement complex things on web pages. 
@@ -139,12 +135,6 @@ The various types of statements are:
 - Exception handling Statements
 5. throw statements.
 6. try.......catch statement.
-
-### Abstract Syntax Tree
-Abstract syntax trees are data structures widely used in compilers, due to their property of representing the structure of program code. An AST is usually the result of the syntax analysisphase of a compiler.
-
-###  Hoisting
-It is a JavaScript mechanism where **variables** and function declarations are moved to the top of their scope before code execution. Inevitably, this means that no matter where functions and **variables** are declared, they are moved to the top of their scope regardless of whether their scope is global or local.
 
 ### Loops and Iterations
 There are diiferent types of the loops, but they all essentially do the same thing, they repeat an action some number of times (and it's actually possible that number could be zero). The various loop mechanisms offer different ways to determine the start and end points of the loop. There are various situations that are more easily served by one type of loop over the others.
