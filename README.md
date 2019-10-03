@@ -18,6 +18,7 @@
  7. [Better Comments](https://marketplace.visualstudio.com/items?itemName=aaron-bond.better-comments)
  8. [Node Exec](https://marketplace.visualstudio.com/items?itemName=miramac.vscode-exec-node)
  9. [CodeMetrics](https://marketplace.visualstudio.com/items?itemName=kisstkondoros.vscode-codemetrics)
+ 10. [GitLens](https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens)
 
 Functionality of each of the plugin is described [here]( https://docs.google.com/document/d/1ZIMLZxVNHMiGTucqoM5Y-DKLh9hw0KRg2LhRG_yFJFo/edit?usp=sharing )
 
