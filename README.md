@@ -813,7 +813,7 @@ passport.use(
 			if (user) {
 				return done(null, user);
 			}
-			return done(null, false);
+			return  done(null, jwtPayload.id);
 		})
 		.catch(err => done(err));
 	});
@@ -865,22 +865,33 @@ module.exports.readUser = (req, res) => {
 };
 ```
 
-if you try to hit the route `/read` then it will return "Unauthenticated". To make it work we have to send a token with the request so that passport can verify and let you proceed further.
+if you try to hit the route `/read` then it will return "Unauthorized". To make it work we have to send a token with the request so that passport can verify and let you proceed further.
+
+![enter image description here](https://actyv-assets.s3.ap-south-1.amazonaws.com/bootcamp/passport_6.png)
 
 But we haven't created a token yet. You can use [jwt.io](https://jwt.io/) or we added a route "/get/jwt/token" for it in `routes/index.js`. You can call this route passing and it will return you the token.
 
+For your learning purpose we hardcoded the value `{ id:  "5d91d0cdc6044d08ec7e2581" }`. So this method will return a token encoded with this is. Look at `generateTokens` method in `controller/index.js`
+
+![enter image description here](https://actyv-assets.s3.ap-south-1.amazonaws.com/bootcamp/postman_5.png)
+
 Now after getting the token let's see how to pass this in postman.
 
+![enter image description here](https://actyv-assets.s3.ap-south-1.amazonaws.com/bootcamp/passport_7.png)
 
+Since there will not be an actual user with id : 5d91d0cdc6044d08ec7e2581, so this return the decoded id from token.
 
-
-But this will be not the case in a production env where we should hit a route to get a token. So we are going to do that now. The flow will be like this.
+But this will be not the case in a production env where we will have hit a route to get a token. So we are going to solve that now. The flow will be like this.
 
 post "/login" route will be protected by "Local Strategy" and it will return us with a token. Then with each subsequent request like "/profile" we will send this token in the header and get "/profile" route is protected by "jwt" strategy which will validate the token and will let us proceed further.
 
 So now move to `passport/login` branch.
 
 The local strategy lies in the "passport/strategy/local/index.js" file. Open this file.
+
+Before proceeding further lets create a user and save it to database:
+
+![enter image description here](https://actyv-assets.s3.ap-south-1.amazonaws.com/bootcamp/passport_8.png)
 
 First we will import the local strategy and bcrypt for password compare:
 
@@ -898,7 +909,7 @@ const options = {
 };
 ```
 
-in usernameField and password we need to assign them with the properties in which username and password is coming from the request. Like for eg. from the frontend if you are sending the username through "email" object and password through "password" like 
+In usernameField and password we need to assign them with the properties in which username and password is coming from the request. Like for eg. from the frontend if you are sending the username through "email" object and password through "password" like 
 
 ```
 {
@@ -955,4 +966,20 @@ module.exports.loginUser = (req, res) => {
 
 As I said previously also, done(null, user) will add a user property to request object which can later be used as req.user. So in loginUser method we are generating a token using user's id property and we are sending back to the frontend.
 
-So this is how we have to get our token. Now let's see how we can pass this token in request header using postman.
+
+Let's login using wrong passworrd:
+
+![enter image description here](https://actyv-assets.s3.ap-south-1.amazonaws.com/bootcamp/passport_9.png)
+
+Now let's try with correct password:
+
+![enter image description here](https://actyv-assets.s3.ap-south-1.amazonaws.com/bootcamp/passport_10.png)
+
+Now this will return a token and now we can use this token to authenticate the "/read" route.
+
+![enter image description here](https://actyv-assets.s3.ap-south-1.amazonaws.com/bootcamp/passport_11.png)
+
+Now we completed the full login flow.
+1. First we registered the user.
+2. Then we log in. If credentials are correct it will return us a token otherwise it will return "Unauthorized".
+3. Then we use this token to get user profile.
