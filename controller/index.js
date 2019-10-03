@@ -24,7 +24,7 @@ module.exports.createUser = (req, res) => {
   });
 
   // Saving the user in the database
-  newUser.save(function(err, user) {
+  newUser.save(function (err, user) {
     if (err)
       return res
         .status(HttpStatus.NOT_FOUND)
@@ -39,7 +39,7 @@ module.exports.createUser = (req, res) => {
  * Reading the existing user using request parameters.
  */
 module.exports.readUser = (req, res) => {
-  res.status(HttpStatus.OK).json({ user: req.user });
+  res.status(HttpStatus.OK).json({ userId: req.user });
 };
 
 /**
@@ -47,7 +47,7 @@ module.exports.readUser = (req, res) => {
  */
 module.exports.getByLastName = (req, res) => {
   // It was earlier defined as a static method inside methods/index.js
-  User.findByLastName("Ch", function(err, data) {
+  User.findByLastName("Ch", function (err, data) {
     if (err)
       return res
         .status(HttpStatus.BAD_REQUEST)

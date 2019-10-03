@@ -64,4 +64,5 @@ router.delete(
  * Getting the jwt token
  */
 router.get("/get/jwt/token", userController.generateTokens);
+
 module.exports = router;

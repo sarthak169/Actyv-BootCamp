@@ -31,13 +31,13 @@ const { User } = require("../../schema/index");
  * Using JWT Strategy
  */
 passport.use(
-  new JWTStrategy(options, async function(jwtPayload, done) {
+  new JWTStrategy(options, async function (jwtPayload, done) {
     await User.findById({ _id: jwtPayload.id })
       .then(user => {
         if (user) {
           return done(null, user);
         }
-        return done(null, false);
+        return done(null, jwtPayload.id);
       })
       .catch(err => done(err));
   })

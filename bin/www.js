@@ -11,7 +11,7 @@ require("dotenv").config();
 /**
  * Setting the port to application
  */
-app.set("port", process.env.PORT || 3000);
+app.set("port", process.env.PORT);
 
 /**
  * HTTP module
