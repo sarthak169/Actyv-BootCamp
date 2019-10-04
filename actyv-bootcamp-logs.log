@@ -1,0 +1,23 @@
+[2019-10-04T09:23:45.618] [INFO] default - The mongoose is successfully connected.
+[2019-10-04T09:23:55.121] [INFO] default - Mongoose connection is disconnected
+[2019-10-04T11:55:29.346] [INFO] default - The mongoose is successfully connected.
+[2019-10-04T13:04:30.210] [INFO] default - The mongoose is successfully connected.
+[2019-10-04T13:05:21.058] [INFO] default - The mongoose is successfully connected.
+[2019-10-04T13:05:59.717] [INFO] default - The mongoose is successfully connected.
+[2019-10-04T13:06:08.793] [INFO] default - Mongoose connection is disconnected
+[2019-10-04T13:13:21.723] [INFO] default - The mongoose is successfully connected.
+[2019-10-04T13:13:21.725] [WARN] default - The mongo  URI is not in the vault (vulnerable)
+[2019-10-04T13:13:51.072] [INFO] default - Mongoose connection is disconnected
+[2019-10-04T13:13:55.558] [INFO] default - Mongoose connection is disconnected
+[2019-10-04T13:13:55.571] [ERROR] default - Mongoose connection has occured MongoNetworkError: bad auth Authentication failed. error
+[2019-10-04T13:14:54.232] [INFO] default - Mongoose connection is disconnected
+[2019-10-04T13:14:54.245] [ERROR] default - Mongoose connection has occured MongoNetworkError: bad auth Authentication failed. error
+[2019-10-04T13:15:21.105] [INFO] default - The mongoose is successfully connected.
+[2019-10-04T13:15:21.107] [WARN] default - The mongo  URI is not in the vault (vulnerable)
+[2019-10-04T13:25:03.375] [INFO] default - The mongoose is successfully connected.
+[2019-10-04T13:25:03.377] [WARN] default - The mongo  URI is not in the vault (vulnerable)
+[2019-10-04T13:26:53.301] [INFO] default - The mongoose is successfully connected.
+[2019-10-04T13:26:53.303] [WARN] default - The mongo  URI is not in the vault (vulnerable)
+[2019-10-04T13:28:29.252] [INFO] default - The mongoose is successfully connected.
+[2019-10-04T13:28:29.254] [WARN] default - The mongo  URI is not in the vault (vulnerable)
+[2019-10-04T13:28:35.115] [INFO] default - Mongoose connection is disconnected
