@@ -28,6 +28,21 @@ Functionality of each of the plugin is described [here]( https://docs.google.com
  3. Node Weekly: https://nodeweekly.com/
  4. Mobile Dev Weekly: https://mobiledevweekly.com/
 
+# VSCode Settings
+
+Hit `Shift+Cmd+P` in VSCode and click `Open Settings (JSON)` then append the following to it.
+
+```
+{
+	"editor.fontSize": 26,
+	"editor.tabSize": 2,
+	"editor.wordWrap": "on",
+	"terminal.integrated.fontSize": 26,
+	"emmet.includeLanguages": {"javascript": "javascriptreact"},
+	"emmet.syntaxProfiles": {"javascript": "jsx"}
+}
+```
+
 # Let's Begin
 
 Task for Day 1 will be to setup the environment like tools, plugins and run the express server. Then we will learn to configure git to push our code to github.
