@@ -77,28 +77,6 @@ describe("Testing the route", () => {
       });
     done();
   });
-
-  /**
-   * It should check the discriminator connection
-   * @function
-   * @inner
-   * @param {string} description - string explaining what test should do
-   * @param {callback} middleware - function with done as a param
-   */
-
-  it("it should test the connection of discriminator", done => {
-    chai
-      .request(server)
-      .get("/users/testBase")
-      .end((err, res) => {
-        res.should.have.status(200);
-        res.body.should.be.a("object");
-        res.body.should.have
-          .property("message")
-          .eql("User With Base discriminator works successfully");
-      });
-    done();
-  });
 });
 
 /**
