@@ -8,6 +8,12 @@ const router = express.Router();
 
 const { getVirtualUser } = require("../02-Methods/03-Virtuals/index");
 const { getDegree, userSearch } = require("../02-Methods/01-Instance/index");
+
+/**
+ * GET request for testing the route
+ */
+router.get("/test",userController.testUser);
+
 /**
  * POST request to create a new user
  */
