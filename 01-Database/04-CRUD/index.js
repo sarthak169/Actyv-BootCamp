@@ -4,6 +4,14 @@
 const { User } = require("../02-Schema/index");
 const HttpStatus = require("http-status-codes");
 
+
+/**
+ * Check the user Route
+ */
+module.exports.testRoute =(req,res)=>{
+  res.status(HttpStatus.OK).json({message: "User Router Works"});
+};
+
 /**
  * Creating the user and add the user to database
  */
